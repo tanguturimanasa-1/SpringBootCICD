@@ -1,16 +1,11 @@
 pipeline {
     agent any
 
-    triggers {
-        githubPush()
+    tools {
+        maven 'Maven3'
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
 
         stage('Build') {
             steps {
@@ -35,7 +30,7 @@ pipeline {
                 bat '''
                 docker stop springboot-cicd-container || exit 0
                 docker rm springboot-cicd-container || exit 0
-                docker run -d -p 8080:8080 --name springboot-cicd-container springboot-cicd:latest
+                docker run -d -p 8085:8085 --name springboot-cicd-container springboot-cicd:latest
                 '''
             }
         }
@@ -45,6 +40,7 @@ pipeline {
         success {
             echo 'CI/CD Pipeline completed successfully!'
         }
+
         failure {
             echo 'CI/CD Pipeline failed!'
         }
